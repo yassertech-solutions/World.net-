@@ -1,0 +1,665 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ff7417">
+<meta name="description" content="YASSER TUNEL - Premium VPN Store">
+<title>YASSER TUNEL | VPN ECOSYSTEM</title>
+
+<link rel="manifest" id="appManifest">
+<link rel="apple-touch-icon" href="https://i.ibb.co/Cp4D3Jkt/jawadmd.jpg">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+:root{
+--orange:#ff7417;--orange2:#e85b00;--pale:#fff0e5;
+--bg:#f5f6f8;--card:#fff;--text:#20242b;--muted:#8b929c;
+--line:#eceff2;--green:#16a56b;--red:#ef4050;
+--shadow:0 8px 25px rgba(30,35,45,.055)
+}
+body.dark{
+--bg:#11151b;--card:#1b222c;--text:#f4f6f8;
+--muted:#a0a8b4;--line:#2b3440;--pale:#382619;
+--shadow:0 8px 25px rgba(0,0,0,.18)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);padding-bottom:95px;transition:.2s}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.app{max-width:520px;min-height:100vh;margin:auto}
+.topbar{height:72px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 17px;position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;color:white;font-size:18px;background:linear-gradient(140deg,#ff984e,#ed5b00);box-shadow:0 5px 15px #ff741733}
+.brand h1{font:700 16px 'Space Grotesk'}
+.brand small{display:block;color:var(--muted);font-size:8px;letter-spacing:2px;margin-top:2px}
+.actions{display:flex;gap:8px}
+.icon-btn{width:38px;height:38px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text);position:relative}
+.dot{position:absolute;width:9px;height:9px;background:var(--red);border:2px solid var(--card);border-radius:50%;right:6px;top:5px;display:none}
+.dot.show{display:block}
+.page{display:none;padding:18px 16px 25px;animation:fade .2s}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.hero{background:linear-gradient(115deg,#ff984e,#ff7417 55%,#e85b00);color:white;padding:22px;border-radius:22px;position:relative;overflow:hidden;box-shadow:0 12px 25px #ff74172c}
+.hero:after{content:"";position:absolute;width:180px;height:180px;border:1px solid #ffffff35;border-radius:50%;right:-65px;top:-80px;box-shadow:0 0 0 25px #ffffff0c,0 0 0 50px #ffffff08}
+.hero-tag{font-size:9px;letter-spacing:1px;font-weight:800;background:#ffffff25;padding:7px 10px;border-radius:20px}
+.hero h2{font:700 25px 'Space Grotesk';line-height:1.2;margin:15px 0 7px}
+.hero p{font-size:11px;color:#fff1e7;line-height:1.6;max-width:80%}
+.hero-icon{position:absolute;right:19px;bottom:18px;font-size:58px;color:#ffffff35}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0 24px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--shadow)}
+.stat i{display:grid;place-items:center;width:30px;height:30px;border-radius:10px;background:var(--pale);color:var(--orange);font-size:13px;margin-bottom:9px}
+.stat strong{font:700 20px 'Space Grotesk';display:block}
+.stat span{font-size:9px;color:var(--muted)}
+.heading{display:flex;align-items:center;justify-content:space-between;margin:22px 1px 12px}
+.heading h3{font:700 16px 'Space Grotesk'}
+.heading small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.text-btn{border:0;background:none;color:var(--orange2);font-size:10px;font-weight:800}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quick{border:1px solid var(--line);background:var(--card);border-radius:17px;padding:15px;text-align:left;color:var(--text);box-shadow:var(--shadow)}
+.quick i{width:37px;height:37px;border-radius:12px;background:var(--pale);color:var(--orange);display:grid;place-items:center;margin-bottom:10px}
+.quick strong{font-size:12px;display:block}
+.quick small{font-size:9px;color:var(--muted)}
+.search{position:relative;margin:14px 0 12px}
+.search i{position:absolute;left:14px;top:15px;color:var(--muted)}
+.search input{width:100%;height:45px;border:1px solid var(--line);border-radius:13px;padding:0 13px 0 39px;background:var(--card);color:var(--text);outline:none;font-size:12px}
+.search input:focus{border-color:var(--orange)}
+.filters{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:2px 0 10px}
+.filters::-webkit-scrollbar{display:none}
+.filter{white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:20px;padding:8px 13px;font-size:10px;font-weight:700}
+.filter.active{background:var(--orange);border-color:var(--orange);color:white}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vpn{min-width:0;background:var(--card);border:1px solid var(--line);border-radius:17px;padding:12px;box-shadow:var(--shadow)}
+.vpn-top{display:flex;justify-content:space-between;align-items:center}
+.vpn-icon{width:38px;height:38px;background:var(--pale);color:var(--orange);border-radius:12px;display:grid;place-items:center}
+.badge{font-size:8px;font-weight:800;border-radius:20px;padding:5px 7px;background:#e8f8f0;color:var(--green)}
+.badge.vip{background:var(--pale);color:var(--orange2)}
+.vpn h4{font:700 13px 'Space Grotesk';margin-top:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vpn p{font-size:9px;color:var(--muted);line-height:1.5;margin-top:5px;height:27px;overflow:hidden}
+.vpn-meta{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:9px;margin-top:10px;font-size:9px;color:var(--muted)}
+.vpn-meta b{color:var(--orange2)}
+.vpn-buttons{display:flex;gap:6px;margin-top:10px}
+.details{flex:1;border:0;background:var(--pale);color:var(--orange2);border-radius:9px;padding:9px 4px;font-size:9px;font-weight:800}
+.fav{width:34px;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:9px}
+.fav.saved{color:var(--red);border-color:#ffd6d9}
+.empty{grid-column:1/-1;background:var(--card);border:1px dashed var(--line);border-radius:16px;padding:30px 12px;text-align:center;color:var(--muted);font-size:11px}
+.empty i{display:block;color:var(--orange);font-size:24px;margin-bottom:10px}
+.banner{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:15px}
+.banner:before{content:"";display:block;width:32px;height:4px;border-radius:5px;background:var(--orange);margin-bottom:12px}
+.banner h2{font:700 21px 'Space Grotesk'}
+.banner p{font-size:10px;line-height:1.6;color:var(--muted);margin-top:6px}
+.update{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px;margin-bottom:10px;box-shadow:var(--shadow)}
+.update-head{display:flex;justify-content:space-between;gap:10px}
+.update h4{font-size:12px}
+.update-tag{background:var(--pale);color:var(--orange2);font-size:8px;padding:5px 8px;border-radius:20px;font-weight:800}
+.update p{font-size:10px;color:var(--muted);line-height:1.6;margin-top:9px}
+.update time{display:block;color:var(--muted);font-size:9px;margin-top:10px}
+.profile{background:var(--card);border:1px solid var(--line);border-radius:19px;padding:22px;text-align:center}
+.avatar{width:82px;height:82px;border-radius:50%;object-fit:cover;border:4px solid var(--pale);padding:3px}
+.profile h2{font:700 19px 'Space Grotesk';margin-top:10px}
+.profile p{font-size:10px;color:var(--muted);line-height:1.7;margin-top:7px}
+.profile-label{display:inline-block;background:var(--pale);color:var(--orange2);padding:7px 10px;border-radius:20px;font-size:8px;font-weight:800;margin-top:12px}
+.menu-list{display:grid;gap:9px;margin-top:15px}
+.menu-item{display:flex;align-items:center;gap:12px;width:100%;padding:13px;background:var(--card);border:1px solid var(--line);border-radius:13px;text-align:left;color:var(--text);font-size:11px;font-weight:700;text-decoration:none}
+.menu-item i:first-child{width:21px;color:var(--orange);text-align:center}
+.menu-item .right{margin-left:auto;color:var(--muted)}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;display:grid;grid-template-columns:repeat(5,1fr);background:var(--card);border-top:1px solid var(--line);padding:9px 5px calc(9px + env(safe-area-inset-bottom));z-index:30}
+.nav{border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:5px;font-size:9px;font-weight:700;position:relative}
+.nav i{font-size:17px}
+.nav.active{color:var(--orange)}
+.new{position:absolute;top:-7px;right:8%;background:var(--red);color:white;padding:3px 5px;border-radius:7px;font-size:7px;display:none}
+.new.show{display:block}
+.modal{position:fixed;inset:0;background:#10151dcc;display:none;align-items:flex-end;justify-content:center;z-index:80;padding:12px}
+.modal.show{display:flex}
+.modal-box{width:100%;max-width:490px;max-height:88vh;overflow:auto;background:var(--card);border-radius:22px;padding:20px;animation:up .22s}
+@keyframes up{from{transform:translateY(30px)}to{transform:none}}
+.modal-head{display:flex;justify-content:space-between;align-items:center}
+.modal-head h3{font:700 17px 'Space Grotesk'}
+.close{width:33px;height:33px;border:0;border-radius:10px;background:var(--bg);color:var(--text)}
+.modal-icon{width:53px;height:53px;border-radius:15px;background:var(--pale);color:var(--orange);display:grid;place-items:center;font-size:22px;margin:17px 0 10px}
+.modal-title{font:700 20px 'Space Grotesk'}
+.modal-desc{font-size:11px;color:var(--muted);line-height:1.7;margin-top:7px}
+.detail-rows{display:grid;gap:8px;margin:16px 0}
+.detail-row{display:flex;justify-content:space-between;gap:10px;background:var(--bg);padding:11px;border-radius:10px;font-size:10px}
+.detail-row span{color:var(--muted)}
+.download,.primary{width:100%;border:0;background:linear-gradient(100deg,#ff9143,#e85b00);color:white;padding:14px;border-radius:12px;font-size:11px;font-weight:800}
+.secondary{width:100%;border:1px solid var(--line);background:var(--card);color:var(--text);padding:12px;border-radius:11px;font-size:11px;font-weight:700;margin-top:9px}
+.form-input,.form-area{width:100%;padding:13px;border:1px solid var(--line);border-radius:11px;background:var(--bg);color:var(--text);outline:none;margin:7px 0;font-size:12px}
+.form-area{min-height:90px;resize:vertical}
+.form-label{font-size:10px;color:var(--muted);font-weight:700;display:block;margin-top:9px}
+.toast{position:fixed;z-index:100;bottom:95px;left:50%;transform:translate(-50%,15px);opacity:0;pointer-events:none;background:#252a32;color:white;padding:11px 16px;border-radius:11px;font-size:10px;transition:.2s;max-width:90%;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.footer{text-align:center;color:var(--muted);font-size:9px;padding:22px 0}
+.footer b{color:var(--orange2)}
+.status-note{font-size:10px;color:var(--muted);line-height:1.6;margin:10px 0}
+</style>
+</head>
+
+<body>
+<div class="app">
+<header class="topbar">
+ <div class="brand">
+  <div class="logo"><i class="fa-solid fa-shield-halved"></i></div>
+  <div><h1>YASSER TUNEL</h1><small>PREMIUM VPN ECOSYSTEM</small></div>
+ </div>
+ <div class="actions">
+  <button class="icon-btn" onclick="showPage('updates')" aria-label="Updates"><i class="fa-regular fa-bell"></i><span class="dot" id="topDot"></span></button>
+  <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+ </div>
+</header>
+
+<section class="page active" id="home">
+ <div class="hero">
+  <span class="hero-tag"><i class="fa-solid fa-bolt"></i> NEXT LEVEL VPN PLATFORM</span>
+  <h2>WELCOME TO<br>YASSER TUNEL</h2>
+  <p>Discover configurations, explore premium options and stay updated.</p>
+  <i class="fa-solid fa-shield-halved hero-icon"></i>
+ </div>
+ <div class="stats">
+  <div class="stat"><i class="fa-solid fa-layer-group"></i><strong id="totalCount">0</strong><span>Total VPNs</span></div>
+  <div class="stat"><i class="fa-solid fa-unlock"></i><strong id="freeCount">0</strong><span>Free VPNs</span></div>
+  <div class="stat"><i class="fa-solid fa-crown"></i><strong id="vipCount">0</strong><span>VIP VPNs</span></div>
+ </div>
+ <div class="heading"><div><h3>Explore Categories</h3><small>Choose your destination</small></div></div>
+ <div class="quick-grid">
+  <button class="quick" onclick="showPage('free')"><i class="fa-solid fa-unlock-keyhole"></i><strong>Free VPN</strong><small>Free configurations</small></button>
+  <button class="quick" onclick="showPage('vip')"><i class="fa-solid fa-crown"></i><strong>VIP VPN</strong><small>Premium collection</small></button>
+  <button class="quick" onclick="showPage('favorites')"><i class="fa-solid fa-heart"></i><strong>Favorites</strong><small>Your saved VPNs</small></button>
+  <button class="quick" onclick="showPage('history')"><i class="fa-solid fa-clock-rotate-left"></i><strong>History</strong><small>Recent downloads</small></button>
+ </div>
+ <div class="heading"><div><h3>Recently Added</h3><small>Latest configurations</small></div><button class="text-btn" onclick="showPage('free')">VIEW ALL →</button></div>
+ <div class="grid" id="latestGrid"><div class="empty">Loading VPNs...</div></div>
+ <div class="footer">POWERED BY <b>YASSER TECH SOLUTIONS</b></div>
+</section>
+
+<section class="page" id="free">
+ <div class="banner"><h2>Free VPN Library</h2><p>Explore the available free configurations for your device.</p></div>
+ <div class="search"><i class="fa-solid fa-magnifying-glass"></i><input id="freeSearch" placeholder="Search VPN..." oninput="renderList('free')"></div>
+ <div class="filters" id="freeFilters">
+  <button class="filter active" onclick="setFilter('free','All',this)">All</button>
+  <button class="filter" onclick="setFilter('free','Android',this)">Android</button>
+  <button class="filter" onclick="setFilter('free','iOS',this)">iOS</button>
+  <button class="filter" onclick="setFilter('free','Other',this)">Other</button>
+ </div>
+ <div class="grid" id="freeGrid"></div>
+</section>
+
+<section class="page" id="vip">
+ <div class="banner"><h2>VIP Collection</h2><p>Explore premium configurations available in our store.</p></div>
+ <div class="search"><i class="fa-solid fa-magnifying-glass"></i><input id="vipSearch" placeholder="Search VIP VPN..." oninput="renderList('vip')"></div>
+ <div class="filters" id="vipFilters">
+  <button class="filter active" onclick="setFilter('vip','All',this)">All</button>
+  <button class="filter" onclick="setFilter('vip','Android',this)">Android</button>
+  <button class="filter" onclick="setFilter('vip','iOS',this)">iOS</button>
+  <button class="filter" onclick="setFilter('vip','Other',this)">Other</button>
+ </div>
+ <div class="grid" id="vipGrid"></div>
+</section>
+
+<section class="page" id="favorites">
+ <div class="banner"><h2>Your Favorites ❤️</h2><p>VPN configurations you have saved on this device.</p></div>
+ <div class="grid" id="favoritesGrid"></div>
+</section>
+
+<section class="page" id="history">
+ <div class="banner"><h2>Download History</h2><p>Your recent VPN download activity on this device.</p></div>
+ <div class="heading"><div><h3>Recent Activity</h3></div><button class="text-btn" onclick="clearHistory()">CLEAR HISTORY</button></div>
+ <div class="grid" id="historyGrid"></div>
+</section>
+
+<section class="page" id="updates">
+ <div class="banner"><h2>Latest Updates</h2><p>Announcements and new information from YASSER TUNEL.</p></div>
+ <div class="menu-list" style="margin-bottom:15px">
+  <button class="menu-item" onclick="requestNotifications()"><i class="fa-solid fa-bell"></i> Enable Browser Notifications <i class="fa-solid fa-chevron-right right"></i></button>
+  <button class="menu-item" onclick="checkForUpdates()"><i class="fa-solid fa-rotate"></i> Check App Updates <i class="fa-solid fa-chevron-right right"></i></button>
+ </div>
+ <div id="updatesList"><div class="empty">Loading updates...</div></div>
+</section>
+
+<section class="page" id="profile">
+ <div class="profile">
+  <img class="avatar" src="https://i.ibb.co/Cp4D3Jkt/jawadmd.jpg" alt="Yasser Tech">
+  <h2 id="profileName">GUEST USER</h2>
+  <p id="profileDescription">You are browsing YASSER TUNEL as a guest.</p>
+  <span class="profile-label" id="profileLabel"><i class="fa-solid fa-circle-check"></i> OPEN ACCESS</span>
+  <button class="primary" id="loginButton" style="margin-top:15px" onclick="openLogin()">LOGIN / REGISTER</button>
+  <button class="secondary" id="logoutButton" style="display:none" onclick="logout()">LOG OUT</button>
+ </div>
+ <div class="heading"><div><h3>Your Preferences</h3><small>Customize your experience</small></div></div>
+ <div class="menu-list">
+  <button class="menu-item" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i> Switch Appearance <i class="fa-solid fa-chevron-right right"></i></button>
+  <button class="menu-item" onclick="showPage('favorites')"><i class="fa-solid fa-heart"></i> My Favorites <i class="fa-solid fa-chevron-right right"></i></button>
+  <button class="menu-item" onclick="showPage('history')"><i class="fa-solid fa-clock"></i> Download History <i class="fa-solid fa-chevron-right right"></i></button>
+  <button class="menu-item" onclick="installApp()"><i class="fa-solid fa-mobile-screen-button"></i> Install App <i class="fa-solid fa-chevron-right right"></i></button>
+  <button class="menu-item" onclick="openReport()"><i class="fa-solid fa-flag"></i> Report a VPN <i class="fa-solid fa-chevron-right right"></i></button>
+  <a class="menu-item" href="https://wa.me/255793785960" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp Support <i class="fa-solid fa-arrow-up-right-from-square right"></i></a>
+  <a class="menu-item" href="https://t.me/yasser_0100" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i> Telegram Channel <i class="fa-solid fa-arrow-up-right-from-square right"></i></a>
+  <a class="menu-item" href="https://whatsapp.com/channel/0029VbD1QcaGk1FkH9XpvD3X" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp Channel <i class="fa-solid fa-arrow-up-right-from-square right"></i></a>
+ </div>
+ <div class="footer">© <span id="year"></span> <b>YASSER TECH SOLUTIONS</b></div>
+</section>
+
+<nav class="bottom">
+ <button class="nav active" data-page="home" onclick="showPage('home')"><i class="fa-solid fa-house"></i>Home</button>
+ <button class="nav" data-page="free" onclick="showPage('free')"><i class="fa-solid fa-unlock"></i>Free</button>
+ <button class="nav" data-page="vip" onclick="showPage('vip')"><i class="fa-solid fa-crown"></i>VIP</button>
+ <button class="nav" data-page="updates" onclick="showPage('updates')"><span class="new" id="navNew">NEW</span><i class="fa-solid fa-bell"></i>Updates</button>
+ <button class="nav" data-page="profile" onclick="showPage('profile')"><i class="fa-solid fa-user"></i>Profile</button>
+</nav>
+
+<div class="modal" id="vpnModal" onclick="if(event.target===this)closeModal()">
+ <div class="modal-box">
+  <div class="modal-head"><h3>VPN Details</h3><button class="close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="modal-icon"><i class="fa-solid fa-shield-halved"></i></div>
+  <div class="modal-title" id="modalName"></div>
+  <p class="modal-desc" id="modalDesc"></p>
+  <div class="detail-rows">
+   <div class="detail-row"><span>Platform</span><b id="modalPlatform"></b></div>
+   <div class="detail-row"><span>Category</span><b id="modalCategory"></b></div>
+   <div class="detail-row"><span>Type</span><b id="modalType"></b></div>
+   <div class="detail-row"><span>Price</span><b id="modalPrice"></b></div>
+  </div>
+  <button class="download" onclick="downloadCurrent()"><i class="fa-solid fa-download"></i> DOWNLOAD VPN</button>
+  <button class="secondary" onclick="openReport()"><i class="fa-solid fa-flag"></i> REPORT THIS VPN</button>
+ </div>
+</div>
+
+<!-- LOGIN -->
+<div class="modal" id="loginModal" onclick="if(event.target===this)closeLogin()">
+ <div class="modal-box">
+  <div class="modal-head"><h3>YASSER TUNEL ACCOUNT</h3><button class="close" onclick="closeLogin()"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="modal-icon"><i class="fa-solid fa-user-lock"></i></div>
+  <p class="modal-desc">Create a local profile on this browser.</p>
+  <label class="form-label">Your Name</label>
+  <input class="form-input" id="loginName" maxlength="40" placeholder="Enter your name">
+  <label class="form-label">Email (optional)</label>
+  <input class="form-input" id="loginEmail" type="email" maxlength="100" placeholder="Email address">
+  <p class="status-note">Profile information is saved only in this browser. This is not server authentication.</p>
+  <button class="primary" onclick="saveLogin()">CONTINUE</button>
+ </div>
+</div>
+
+<!-- VPN REPORT -->
+<div class="modal" id="reportModal" onclick="if(event.target===this)closeReport()">
+ <div class="modal-box">
+  <div class="modal-head"><h3>Report VPN</h3><button class="close" onclick="closeReport()"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="modal-icon"><i class="fa-solid fa-flag"></i></div>
+  <p class="modal-desc">Tell us about a problem with this VPN.</p>
+  <label class="form-label">VPN Name</label>
+  <input class="form-input" id="reportVpnName" placeholder="VPN name">
+  <label class="form-label">Reason</label>
+  <select class="form-input" id="reportReason">
+   <option value="Broken download link">Broken download link</option>
+   <option value="Configuration not working">Configuration not working</option>
+   <option value="Incorrect information">Incorrect information</option>
+   <option value="Other">Other</option>
+  </select>
+  <label class="form-label">Additional details</label>
+  <textarea class="form-area" id="reportDetails" maxlength="1000" placeholder="Describe the issue..."></textarea>
+  <button class="primary" onclick="submitReport()">SUBMIT REPORT</button>
+ </div>
+</div>
+
+<div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* SUPABASE */
+const SUPABASE_URL="https://ingqthmfyufkgtsidqfv.supabase.co";
+const SUPABASE_KEY="sb_publishable_zhoDTTBXrr9Rv4f9HwLLkg_nTrpBfWv";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const APP_VERSION="1.1.0";
+let vpns=[],notifications=[],currentVpn=null;
+let activeFilters={free:"All",vip:"All"};
+let favorites=readStore("yts_favorites_v2",[]);
+let history=readStore("yts_history_v2",[]);
+let latestKey=null;
+let seenKey=readStore("yts_seen_update_v2","");
+let localUser=readStore("yts_local_profile",null);
+let installPrompt=null;
+
+function readStore(key,fallback){
+ try{const value=localStorage.getItem(key);return value===null?fallback:JSON.parse(value)}
+ catch(e){return fallback}
+}
+function saveStore(key,value){
+ try{localStorage.setItem(key,JSON.stringify(value));}
+ catch(e){toast("Browser storage unavailable");}
+}
+function safe(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function isVip(v){
+ const s=`${v.type||""} ${v.category||""}`.toLowerCase();
+ return s.includes("vip")||s.includes("premium")||s.includes("paid");
+}
+function toast(message){
+ const el=document.getElementById("toast");
+ el.textContent=message;el.classList.add("show");
+ clearTimeout(window.toastTimer);
+ window.toastTimer=setTimeout(()=>el.classList.remove("show"),2600);
+}
+document.getElementById("year").textContent=new Date().getFullYear();
+
+/* NAVIGATION */
+function showPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll(".nav").forEach(n=>n.classList.toggle("active",n.dataset.page===id));
+ if(id==="updates")markSeen();
+ if(id==="favorites")renderFavorites();
+ if(id==="history")renderHistory();
+ if(id==="profile")renderProfile();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* THEME */
+function setTheme(dark){
+ document.body.classList.toggle("dark",dark);
+ document.getElementById("themeIcon").className=dark?"fa-solid fa-sun":"fa-solid fa-moon";
+ try{localStorage.setItem("yts_theme_v2",dark?"dark":"light")}catch(e){}
+}
+function toggleTheme(){setTheme(!document.body.classList.contains("dark"))}
+try{setTheme(localStorage.getItem("yts_theme_v2")==="dark")}catch(e){}
+
+/* VPN CARDS */
+function card(v){
+ const vip=isVip(v),saved=favorites.includes(String(v.id));
+ return `<article class="vpn">
+ <div class="vpn-top"><div class="vpn-icon"><i class="fa-solid fa-shield-halved"></i></div><span class="badge ${vip?"vip":""}">${vip?"VIP":"FREE"}</span></div>
+ <h4>${safe(v.name||"VPN Configuration")}</h4>
+ <p>${safe(v.description||"VPN configuration available.")}</p>
+ <div class="vpn-meta"><span>${safe(v.platform||"Other")}</span><b>${safe(v.price||(vip?"VIP":"FREE"))}</b></div>
+ <div class="vpn-buttons"><button class="details" data-detail="${safe(v.id)}">VIEW DETAILS</button>
+ <button class="fav ${saved?"saved":""}" data-fav="${safe(v.id)}" aria-label="Favorite"><i class="${saved?"fa-solid":"fa-regular"} fa-heart"></i></button></div>
+ </article>`;
+}
+function empty(message,icon="fa-box-open"){
+ return `<div class="empty"><i class="fa-solid ${icon}"></i>${safe(message)}</div>`;
+}
+function setFilter(page,value,button){
+ activeFilters[page]=value;
+ document.querySelectorAll("#"+page+"Filters .filter").forEach(x=>x.classList.remove("active"));
+ button.classList.add("active");renderList(page);
+}
+function renderList(page){
+ const term=document.getElementById(page+"Search").value.toLowerCase().trim();
+ const list=vpns.filter(v=>{
+  const category=page==="vip"?isVip(v):!isVip(v);
+  const p=String(v.platform||"Other").toLowerCase(),f=activeFilters[page].toLowerCase();
+  const platform=f==="all"||(f==="other"?!["android","ios","iphone"].some(x=>p.includes(x)):p.includes(f));
+  const search=`${v.name||""} ${v.description||""} ${v.platform||""} ${v.category||""} ${v.type||""}`.toLowerCase().includes(term);
+  return category&&platform&&search;
+ });
+ document.getElementById(page+"Grid").innerHTML=list.length?list.map(card).join(""):empty("No VPNs found. Try another search.","fa-magnifying-glass");
+}
+function renderHome(){
+ const list=vpns.slice(0,4);
+ document.getElementById("latestGrid").innerHTML=list.length?list.map(card).join(""):empty("No VPNs available yet.");
+ document.getElementById("totalCount").textContent=vpns.length;
+ document.getElementById("freeCount").textContent=vpns.filter(v=>!isVip(v)).length;
+ document.getElementById("vipCount").textContent=vpns.filter(isVip).length;
+}
+async function loadVpns(){
+ const {data,error}=await db.from("vpns").select("*").eq("is_active",true).order("created_at",{ascending:false});
+ if(error){console.error(error);document.getElementById("latestGrid").innerHTML=empty("Unable to load VPNs. Check Supabase permissions.","fa-triangle-exclamation");return}
+ vpns=data||[];renderHome();renderList("free");renderList("vip");
+}
+
+/* FAVORITES */
+function toggleFavorite(id){
+ id=String(id);
+ if(favorites.includes(id)){favorites=favorites.filter(x=>x!==id);toast("Removed from favorites")}
+ else{favorites.push(id);toast("Added to favorites ❤️")}
+ saveStore("yts_favorites_v2",favorites);
+ renderHome();renderList("free");renderList("vip");renderFavorites();
+}
+function renderFavorites(){
+ const list=vpns.filter(v=>favorites.includes(String(v.id)));
+ document.getElementById("favoritesGrid").innerHTML=list.length?list.map(card).join(""):empty("You have not saved any VPN yet.","fa-heart");
+}
+
+/* HISTORY */
+function addHistory(v){
+ const id=String(v.id);history=[id,...history.filter(x=>x!==id)].slice(0,30);
+ saveStore("yts_history_v2",history);
+}
+function renderHistory(){
+ const list=history.map(id=>vpns.find(v=>String(v.id)===id)).filter(Boolean);
+ document.getElementById("historyGrid").innerHTML=list.length?list.map(card).join(""):empty("Your download history is empty.","fa-clock-rotate-left");
+}
+function clearHistory(){history=[];saveStore("yts_history_v2",history);renderHistory();toast("History cleared")}
+
+/* VPN DETAILS */
+function openVpn(id){
+ currentVpn=vpns.find(v=>String(v.id)===String(id));if(!currentVpn)return;
+ document.getElementById("modalName").textContent=currentVpn.name||"VPN";
+ document.getElementById("modalDesc").textContent=currentVpn.description||"No description available.";
+ document.getElementById("modalPlatform").textContent=currentVpn.platform||"Other";
+ document.getElementById("modalCategory").textContent=currentVpn.category||"-";
+ document.getElementById("modalType").textContent=currentVpn.type||(isVip(currentVpn)?"VIP":"Free");
+ document.getElementById("modalPrice").textContent=currentVpn.price||(isVip(currentVpn)?"VIP":"FREE");
+ document.getElementById("vpnModal").classList.add("show");
+}
+function closeModal(){document.getElementById("vpnModal").classList.remove("show")}
+function downloadCurrent(){
+ if(!currentVpn)return;
+ const url=String(currentVpn.download_url||"").trim();
+ if(!url){toast("Download link unavailable");return}
+ try{
+  const parsed=new URL(url);
+  if(!["https:","http:"].includes(parsed.protocol)){toast("Invalid download link");return}
+  addHistory(currentVpn);window.open(parsed.href,"_blank","noopener,noreferrer");toast("Download link opened");
+ }catch(e){toast("Invalid download link")}
+}
+
+/* UPDATES */
+function keyOf(item){return String(item.id||item.created_at||item.title||"")}
+function updateBadge(){
+ const hasNew=!!latestKey&&latestKey!==seenKey;
+ document.getElementById("topDot").classList.toggle("show",hasNew);
+ document.getElementById("navNew").classList.toggle("show",hasNew);
+}
+function markSeen(){
+ if(latestKey){seenKey=latestKey;saveStore("yts_seen_update_v2",seenKey)}
+ updateBadge();
+}
+function renderUpdates(){
+ const target=document.getElementById("updatesList");
+ if(!notifications.length){target.innerHTML=empty("No updates available right now.","fa-bell-slash");return}
+ target.innerHTML=notifications.map(n=>{
+  const date=n.created_at?new Date(n.created_at).toLocaleString():"";
+  return `<article class="update"><div class="update-head"><h4>${safe(n.title||"Yasser Tunel Update")}</h4><span class="update-tag">UPDATE</span></div>
+  <p>${safe(n.message||"")}</p><time><i class="fa-regular fa-calendar"></i> ${safe(date)}</time></article>`;
+ }).join("");
+}
+async function loadNotifications(){
+ const oldKey=latestKey;
+ const {data,error}=await db.from("notifications").select("*").eq("is_active",true).order("created_at",{ascending:false});
+ if(error){console.error(error);return}
+ notifications=data||[];latestKey=notifications.length?keyOf(notifications[0]):null;
+ renderUpdates();updateBadge();
+ if(oldKey&&latestKey&&oldKey!==latestKey&&latestKey!==seenKey){
+  toast("New YASSER TUNEL update 🔔");
+  sendBrowserNotification("YASSER TUNEL","There is a new update available.");
+ }
+}
+
+/* BROWSER NOTIFICATIONS */
+async function requestNotifications(){
+ if(!("Notification" in window)){toast("Browser notifications are not supported");return}
+ try{
+  const permission=await Notification.requestPermission();
+  if(permission==="granted"){toast("Notifications enabled");}
+  else toast("Notification permission was not granted");
+ }catch(e){toast("Unable to enable notifications")}
+}
+function sendBrowserNotification(title,message){
+ if("Notification" in window&&Notification.permission==="granted"&&document.hidden){
+  try{new Notification(title,{body:message,icon:"https://i.ibb.co/Cp4D3Jkt/jawadmd.jpg"})}catch(e){}
+ }
+}
+
+/* LOCAL LOGIN */
+function openLogin(){
+ document.getElementById("loginModal").classList.add("show");
+ if(localUser){
+  document.getElementById("loginName").value=localUser.name||"";
+  document.getElementById("loginEmail").value=localUser.email||"";
+ }
+}
+function closeLogin(){document.getElementById("loginModal").classList.remove("show")}
+function saveLogin(){
+ const name=document.getElementById("loginName").value.trim();
+ const email=document.getElementById("loginEmail").value.trim();
+ if(name.length<2){toast("Please enter your name");return}
+ if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast("Enter a valid email");return}
+ localUser={name,email,createdAt:localUser?.createdAt||new Date().toISOString()};
+ saveStore("yts_local_profile",localUser);
+ closeLogin();renderProfile();toast("Welcome, "+name);
+}
+function renderProfile(){
+ const name=localUser?.name||"GUEST USER";
+ document.getElementById("profileName").textContent=name;
+ document.getElementById("profileDescription").textContent=localUser?
+ "Your local browser profile is active.":"You are browsing YASSER TUNEL as a guest.";
+ document.getElementById("profileLabel").innerHTML=localUser?
+ '<i class="fa-solid fa-user-check"></i> LOCAL PROFILE':'<i class="fa-solid fa-circle-check"></i> OPEN ACCESS';
+ document.getElementById("loginButton").style.display=localUser?"none":"block";
+ document.getElementById("logoutButton").style.display=localUser?"block":"none";
+}
+function logout(){
+ localUser=null;
+ try{localStorage.removeItem("yts_local_profile")}catch(e){}
+ renderProfile();toast("You are now browsing as guest");
+}
+
+/* VPN REPORT */
+function openReport(){
+ if(currentVpn)document.getElementById("reportVpnName").value=currentVpn.name||"";
+ document.getElementById("reportModal").classList.add("show");
+}
+function closeReport(){document.getElementById("reportModal").classList.remove("show")}
+async function submitReport(){
+ const vpnName=document.getElementById("reportVpnName").value.trim();
+ const reason=document.getElementById("reportReason").value;
+ const details=document.getElementById("reportDetails").value.trim();
+ if(!vpnName){toast("Enter VPN name");return}
+ const payload={
+  vpn_name:vpnName,
+  reason:reason,
+  details:details,
+  reporter:localUser?.name||"Guest",
+  vpn_id:currentVpn?.id||null
+ };
+ const {error}=await db.from("vpn_reports").insert(payload);
+ if(error){
+  console.error(error);
+  toast("Report could not be sent. Check report table setup.");
+  return;
+ }
+ closeReport();document.getElementById("reportDetails").value="";
+ toast("Report submitted successfully");
+}
+
+/* APP INSTALL */
+window.addEventListener("beforeinstallprompt",event=>{
+ event.preventDefault();installPrompt=event;
+});
+async function installApp(){
+ if(installPrompt){
+  installPrompt.prompt();
+  const result=await installPrompt.userChoice;
+  installPrompt=null;
+  toast(result.outcome==="accepted"?"App installation started":"Installation cancelled");
+  return;
+ }
+ if(window.matchMedia("(display-mode: standalone)").matches){
+  toast("App is already installed");return;
+ }
+ toast("On iPhone: tap Share, then Add to Home Screen");
+}
+
+/* APP MANIFEST */
+const manifest={
+ name:"YASSER TUNEL",
+ short_name:"YASSER TUNEL",
+ start_url:".",
+ display:"standalone",
+ background_color:"#f5f6f8",
+ theme_color:"#ff7417",
+ icons:[{
+  src:"https://i.ibb.co/Cp4D3Jkt/jawadmd.jpg",
+  sizes:"192x192",
+  type:"image/jpeg"
+ }]
+};
+try{
+ const blob=new Blob([JSON.stringify(manifest)],{type:"application/manifest+json"});
+ document.getElementById("appManifest").href=URL.createObjectURL(blob);
+}catch(e){}
+
+/* UPDATE CHECKER */
+async function checkForUpdates(){
+ toast("Checking app version...");
+ try{
+  const {data,error}=await db.from("app_updates")
+   .select("version,release_notes,is_active,created_at")
+   .eq("is_active",true)
+   .order("created_at",{ascending:false})
+   .limit(1);
+  if(error){
+   console.error(error);
+   toast("Update checker needs app_updates table setup");
+   return;
+  }
+  if(!data||!data.length){toast("You are using version "+APP_VERSION);return}
+  const latest=data[0];
+  if(compareVersions(latest.version,APP_VERSION)>0){
+   alert("New version available: "+latest.version+"\n\n"+(latest.release_notes||"Update available."));
+  }else{
+   toast("Your app is up to date • v"+APP_VERSION);
+  }
+ }catch(e){toast("Unable to check updates")}
+}
+function compareVersions(a,b){
+ const aa=String(a).split(".").map(Number),bb=String(b).split(".").map(Number);
+ for(let i=0;i<Math.max(aa.length,bb.length);i++){
+  const x=aa[i]||0,y=bb[i]||0;
+  if(x>y)return 1;if(x<y)return -1;
+ }
+ return 0;
+}
+
+/* REALTIME */
+function enableRealtime(){
+ try{
+  db.channel("yasser-tunnel-live")
+   .on("postgres_changes",{event:"*",schema:"public",table:"notifications"},()=>loadNotifications())
+   .on("postgres_changes",{event:"*",schema:"public",table:"vpns"},()=>loadVpns())
+   .subscribe();
+ }catch(e){console.log("Realtime fallback enabled")}
+}
+
+/* CLICK HANDLING */
+document.addEventListener("click",e=>{
+ const detail=e.target.closest("[data-detail]");
+ const fav=e.target.closest("[data-fav]");
+ if(detail)openVpn(detail.dataset.detail);
+ if(fav)toggleFavorite(fav.dataset.fav);
+});
+
+/* START */
+renderProfile();
+loadVpns();
+loadNotifications();
+enableRealtime();
+setInterval(loadNotifications,60000);
+setInterval(loadVpns,120000);
+</script>
+</body>
+</html>
